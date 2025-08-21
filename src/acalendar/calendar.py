@@ -19,58 +19,75 @@ MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY = range(7)
 
 
 def find_weekday_same_week(date_: date, weekday: int) -> date:
+    """
+    Return the date of the specified weekday in the same week as date_.
+    Args:
+        date_: Reference date
+        weekday: Target weekday (0=Monday, ..., 6=Sunday)
+    Returns:
+        date: Date of the target weekday in the same week
+    """
     offset = weekday - date_.weekday()
-    return date_ + timedelta(offset)
+    return date_ + timedelta(days=offset)
 
 
 def find_weekday_next_week(date_: date, weekday: int) -> date:
-    """Find the next occurrence of weekday after the given date.
-
-    Always returns a date in the next week, regardless of current weekday.
-
-    Args:
-        date_: The reference date
-        weekday: Target day of week (0=Monday through 6=Sunday)
-
-    Returns:
-        Date of next week's occurrence of weekday
     """
-    current_weekday = date_.weekday()
-    days_until_next_week = 7 - current_weekday  # Days until next week's Monday
-    days_to_target = weekday  # Days from next Monday to target day
-    return date_ + timedelta(days=days_until_next_week + days_to_target)
+    Return the date of the specified weekday in the next week after date_.
+    Args:
+        date_: Reference date
+        weekday: Target weekday (0=Monday, ..., 6=Sunday)
+    Returns:
+        date: Date of the target weekday in the next week
+    """
+    days_until_next_week = 7 - date_.weekday()
+    return date_ + timedelta(days=days_until_next_week + weekday)
 
 
 def weeks_of_period(start_date: date, end_date: date) -> List[Tuple[date, date]]:
+    """
+    Generate a list of (week_start, week_end) tuples for each week in the period.
+    Args:
+        start_date: First day of the period
+        end_date: Last day of the period
+    Returns:
+        List of tuples (week_start, week_end)
+    """
+    # Adjust start and end dates to week boundaries
     if start_date.weekday() > FRIDAY:
         start_date = find_weekday_next_week(start_date, MONDAY)
     if end_date.weekday() > FRIDAY:
         end_date = find_weekday_same_week(end_date, FRIDAY)
-    weeks = [(dt.date(), find_weekday_same_week(dt.date(), FRIDAY))
-             for dt in rrule(WEEKLY,
-                             dtstart=find_weekday_same_week(start_date, MONDAY),
-                             until=end_date)]
-    weeks[0] = (max(start_date, find_weekday_same_week(start_date, MONDAY)),
-                find_weekday_same_week(start_date, FRIDAY))
-    weeks[-1] = (find_weekday_same_week(end_date, MONDAY),
-                 min(end_date, find_weekday_same_week(end_date, FRIDAY)))
+    week_starts = list(rrule(WEEKLY, dtstart=find_weekday_same_week(start_date, MONDAY), until=end_date))
+    weeks = [(dt.date(), find_weekday_same_week(dt.date(), FRIDAY)) for dt in week_starts]
+    if weeks:
+        weeks[0] = (max(start_date, find_weekday_same_week(start_date, MONDAY)),
+                    find_weekday_same_week(start_date, FRIDAY))
+        weeks[-1] = (find_weekday_same_week(end_date, MONDAY),
+                     min(end_date, find_weekday_same_week(end_date, FRIDAY)))
     return weeks
 
 
 def quoted(text: str) -> str:
-    return '"' + text + '"'
+    """Return the input text wrapped in double quotes."""
+    return f'"{text}"'
 
 
 def parse_lines(content_text: str, num_weeks: int, name: str) -> List[str]:
     """
-    Parse the a multi-line string into individual lines
-    Remove the last empty line
+    Parse a multi-line string into a list of lines, removing leading line numbers.
+    Args:
+        content_text: The multi-line string to parse
+        num_weeks: Expected number of lines (weeks)
+        name: Name of the content type (for error reporting)
+    Returns:
+        List of parsed lines
+    Raises:
+        ValueError: If the number of lines does not match num_weeks
     """
     if not content_text:
         return []
-    content_lines = content_text.split('\n')
-    # remove leading line number
-    content_lines = [line[3:].strip() for line in content_lines]
+    content_lines = [line[3:].strip() for line in content_text.split('\n') if line.strip()]
     if len(content_lines) != num_weeks:
         raise ValueError(f'Number of {name} does not agree with number of weeks')
     return content_lines
