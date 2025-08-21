@@ -1,0 +1,24 @@
+<table style="border-collapse: collapse; width: 100%; text-align: center; border: 1px solid;">
+<colgroup>
+    <col style="width: 5%;" span="1" />
+    <col style="width: 10%;" span="1" />
+    <col style="width: 55%;" span="1" />
+    <col style="width: 30%;" span="1" />
+</colgroup>
+<tr style="border-bottom: 1px solid #dddddd;">
+    <th>Week</th>
+    <th>Dates</th>
+    <th>Content</th>
+    <th>Events</th>
+</tr>
+<tbody>
+{% for week in weeks %}
+    <tr style="border-bottom: 1px solid #dddddd;">
+        <td>{{ "%02d" | format(week.number) }}</td>
+        <td>{{ week.start_date }}-{{ week.end_date }}</td>
+        <td><span class="icon-module">{{ week.content }}</span></td>
+        <td>{{ week.note }}</td>
+    </tr>
+{% endfor %}
+</tbody>
+</table>

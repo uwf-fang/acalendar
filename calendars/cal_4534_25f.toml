@@ -1,0 +1,19 @@
+first_day = '2025-08-25'
+last_day = '2025-12-13'
+
+module_titles = """Course Introduction; Environment Overview
+Algorithm analysis, and measurement; Amortized analysis
+Self-balancing trees: AVL trees
+Self-balancing trees: B-trees
+Brute-force; genetic angorithms; backtracking
+Midterm 1
+Design strategies introduction; Divide-and-conquer
+Solving recurrences: master theorem
+Graph representations and algorithms 1
+Graph representations and algorithms 2
+Midterm 2
+Greedy algorithms
+Dynamic programming
+Combinatorics and counting
+Probabilistic algorithms
+Final Exam"""

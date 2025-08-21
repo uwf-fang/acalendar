@@ -1,0 +1,11 @@
+first_day = '2024-10-14'
+last_day = '2024-12-7'
+
+module_titles = """Intro to Course, Environment; Intro to parallel programming
+Parallel hardware and software, Intel intrinsics
+OpenMP Programming
+Midterm Exam; Case study
+MPI Programming
+MPI Programming Case study
+Big Data and Cloud Computing
+Final Exam"""

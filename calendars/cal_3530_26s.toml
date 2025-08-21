@@ -1,0 +1,37 @@
+first_day = '2026-01-07'
+last_day = '2026-05-2'
+spring_break = '2026-03-16'
+
+module_titles = """01. Course Introduction, and Environment Overview
+02. Modular Design, GNU Make and Testing
+03. Memory Management and Rule of Three
+04. Algorithm Analysis and Searching
+05. Recursion; Midterm review
+06. Midterm 1 (first class); C++ Templates
+07. Linear ADTs and Linked Lists
+08. Stack, Queue and Deque ADTs
+09. Sorting Algorithms
+10. Hashing; Midterm review
+11. Midterm 2 (first class); Trees
+12. Trees
+13. Heaps and Exhaustive Search
+14. Graphs
+15. Graphs cont.; Final review
+16. Final Exam"""
+
+module_events = """01. Discord assignment, Attendance due
+02. Labor Day
+03. Checkpoint 1 due
+04.
+05.
+06. Midterm 1, Project 1 due
+07.
+08. Columbus Day, Checkpoint 2 due
+09.
+10.
+11. Midterm 2, Project 2 due
+12. Veteran's Day
+13.
+14. Thanksgiving
+15. Project 3 due
+16. Final exam: link, schedule"""

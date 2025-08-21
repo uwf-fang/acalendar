@@ -1,0 +1,1 @@
++ Split configure to term config and course config

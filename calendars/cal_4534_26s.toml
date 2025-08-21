@@ -1,0 +1,20 @@
+first_day = '2026-01-07'
+last_day = '2026-05-2'
+
+module_titles = """Course Introduction; Environment Overview
+Algorithm analysis; Amortized analysis
+Trees; Self-balancing trees; AVL trees
+B-trees; Algorithm classification
+Brute-force; Backtracking; Genetic algorithms
+Midterm 1; Divide and Conquer
+Solve recurrences
+Combinatorics and counting
+Greedy algorithms 1
+Greedy algorithms 2
+Midterm 2; Dynamic programming 1
+Spring Break
+Dynamic programming 2
+Graph representations and algorithms 1
+Graph representations and algorithms 2
+Final review; Practice
+Final Exam"""

@@ -1,0 +1,17 @@
+first_day = '2024-05-13'
+last_day = '2024-08-09'
+
+module_titles = """Intro to the course; Intro to Big data
+Development environment setup
+Programming in Scala
+Spark core
+Interactive data analysis with spark shell 1
+Interactive data analysis with spark shell 2
+Writing a Spark application
+Spark SQL 1
+Spark SQL 2
+Machine learning with Spark
+Cluster manager
+Monitoring
+Final Exam"""
+

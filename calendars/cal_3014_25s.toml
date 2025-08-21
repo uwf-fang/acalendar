@@ -1,0 +1,17 @@
+module_titles = """Course Intro, Environment and Language Overview
+Variables, Expressions and Control Flow
+User-defined Functions
+Classes and Objects
+Classes and Objects, Cont.; Review
+Midterm Exam 1
+Pointers and Memory Management
+Algorithmic Design 1: Loop and Array
+Algorithmic Design 2: Sorting, String
+Advanced Array Topics; Review
+Spring Break
+Midterm Exam 2
+Memory Management in Classes
+I/O, String I/O and File I/O
+I/O, String I/O and File I/O, Cont.
+Vectors; Review
+Final Exam"""
