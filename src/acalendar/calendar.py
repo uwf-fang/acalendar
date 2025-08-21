@@ -113,31 +113,40 @@ class CourseTerm:
                  module_events: str,
                  spring_break: str = ''
     ) -> None:
+        # Validate and parse start_date
         try:
             self._start_date = datetime.strptime(start_date, self._input_date_format).date()
-        except ValueError:
-            raise ValueError(f"Invalid start date format. Expected {self._input_date_format}")
+        except Exception:
+            raise ValueError(f"Invalid start date format '{start_date}'. Expected {self._input_date_format}")
 
+        # Validate and parse end_date
         try:
             self._end_date = datetime.strptime(end_date, self._input_date_format).date()
-        except ValueError:
-            raise ValueError(f"Invalid end date format. Expected {self._input_date_format}")
+        except Exception:
+            raise ValueError(f"Invalid end date format '{end_date}'. Expected {self._input_date_format}")
 
         if self._end_date <= self._start_date:
-            raise ValueError("End date must be after start date")
+            raise ValueError(f"End date ({end_date}) must be after start date ({start_date})")
 
         self._weeks = weeks_of_period(self._start_date, self._end_date)
         self._num_weeks = len(self._weeks)
+
+        # Validate and parse spring_break
         if spring_break:
             self._num_weeks = self._num_weeks - 1  # exclude spring break week
             try:
                 date_of_week = datetime.strptime(spring_break, self._input_date_format).date()
-            except ValueError:
-                raise ValueError(f"Invalid spring break date format. Expected {self._input_date_format}")
-            assert self._start_date <= date_of_week <= self._end_date, "Spring break must be within the term dates"
+            except Exception:
+                raise ValueError(f"Invalid spring break date format '{spring_break}'. Expected {self._input_date_format}")
+            if not (self._start_date <= date_of_week <= self._end_date):
+                raise ValueError("Spring break must be within the term dates")
+            self._spring_break_week = -1
             for i, (week_start, week_end) in enumerate(self.weeks):
-                if date_of_week >= week_start and date_of_week <= week_end:
+                if week_start <= date_of_week <= week_end:
                     self._spring_break_week = i
+                    break
+            if self._spring_break_week == -1:
+                raise ValueError("Spring break date does not match any week in the term")
         else:
             self._spring_break_week = -1
 
