@@ -157,3 +157,27 @@ def test_course_term_input_validation():
             module_events="01. Event for Week 1\n02. Event for Week 2\n03. Extra Event"
         )
 
+def test_course_term_with_spring_break():
+    # Spring break in the middle week
+    ct = CourseTerm(
+        start_date="2025-03-03",
+        end_date="2025-03-21",
+        module_titles="01. Week1\n02. Week2\n",
+        module_events="01. Event1\n02. Event2\n",
+        spring_break="2025-03-10"
+    )
+    # Should insert spring break as the second week
+    assert ct._spring_break_week == 1
+    assert ct.module_titles == ["Week1", "Spring Break", "Week2"]
+    assert ct.module_events == ["Event1", "No classes", "Event2"]
+
+def test_course_term_spring_break_out_of_range():
+    # Spring break date not in term
+    with pytest.raises(ValueError):
+        CourseTerm(
+            start_date="2025-03-03",
+            end_date="2025-03-21",
+            module_titles="01. Week1\n02. Week2\n",
+            module_events="01. Event1\n02. Event2\n",
+            spring_break="2025-02-10"
+        )
