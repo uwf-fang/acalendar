@@ -16,7 +16,7 @@
     <tr style="border-bottom: 1px solid #dddddd;">
         <td>{{ "%02d" | format(week.number) }}</td>
         <td>{{ week.start_date }}-{{ week.end_date }}</td>
-        <td><span class="icon-module">{{ week.content }}</span></td>
+        <td>{{ week.content }}</td>
         <td>{{ week.note }}</td>
     </tr>
 {% endfor %}
