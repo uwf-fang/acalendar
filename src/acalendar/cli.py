@@ -19,11 +19,11 @@ def run(conf_file: str, latex: bool, csv: bool, html: bool) -> None:
     """
     with open(conf_file, 'rb') as f:
         conf = tomli.load(f)
-    start_date: str = conf.get('first_day')
-    end_date: str = conf.get('last_day')
-    module_titles: str = conf.get('module_titles', "")
-    module_events: str = conf.get('module_events', "")
-    spring_break: str = conf.get('spring_break', "")
+    start_date: str = conf.get('first_day').strip()
+    end_date: str = conf.get('last_day').strip()
+    module_titles: str = conf.get('module_titles', "").strip()
+    module_events: str = conf.get('module_events', "").strip()
+    spring_break: str = conf.get('spring_break', "").strip()
 
     cal: CourseTerm = CourseTerm(
         start_date=start_date,
