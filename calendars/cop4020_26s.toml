@@ -1,0 +1,41 @@
+first_day = '2026-01-07'
+last_day = '2026-05-2'
+spring_break = '2026-03-16'
+
+module_titles = """
+01. Course Introduction
+02. Describing Syntax & Semantics
+03. Describing Syntax & Semantics cont.
+04. Lexical and Syntax Analysis
+05. Lexical and Syntax Analysis cont.
+06. Names, Bindings, and Scopes; Data Types; Expressions and Assignment
+07. Control Structures
+08. Subprograms
+09. Object-oriented Languages
+10. Object-oriented Languages cont.
+11. Functional Languages
+12. Logic Programming Languages
+13. Concurrency; Event-Driven Programming
+14. Exception Handling; Final Review
+15. Student Presentations
+16. Final Exam
+"""
+
+module_events = """
+01. Discord assignment, First-week Attendance due
+02.
+03.
+04.
+05.
+06.
+07.
+08.
+09.
+10.
+11.
+12.
+13.
+14.
+15. Group Project due
+16. Final exam
+"""

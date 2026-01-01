@@ -2,7 +2,8 @@ first_day = '2026-01-07'
 last_day = '2026-05-2'
 spring_break = '2026-03-16'
 
-module_titles = """01. Course Introduction, and Environment Overview
+module_titles = """
+01. Course Introduction, and Environment Overview
 02. Modular Design, GNU Make and Testing
 03. Memory Management and Rule of Three
 04. Algorithm Analysis and Searching
@@ -17,21 +18,24 @@ module_titles = """01. Course Introduction, and Environment Overview
 13. Heaps and Exhaustive Search
 14. Graphs
 15. Graphs cont.; Final review
-16. Final Exam"""
+16. Final Exam
+"""
 
-module_events = """01. Discord assignment, Attendance due
-02. Labor Day
+module_events = """
+01. Discord assignment, First-week Attendance due
+02.
 03. Checkpoint 1 due
 04.
 05.
 06. Midterm 1, Project 1 due
 07.
-08. Columbus Day, Checkpoint 2 due
+08. Checkpoint 2 due
 09.
 10.
 11. Midterm 2, Project 2 due
-12. Veteran's Day
+12.
 13.
-14. Thanksgiving
+14.
 15. Project 3 due
-16. Final exam: link, schedule"""
+16. Final exam: link, schedule
+"""
