@@ -1,0 +1,40 @@
+first_day = '2026-08-17'
+last_day = '2026-12-12'
+spring_break = ''
+thanksgiving_break = '2026-11-23'
+
+module_titles = """
+01. Course Introduction; Environment Overview
+02. Algorithm analysis, and measurement; Amortized analysis
+03. Self-balancing trees: AVL trees
+04. Self-balancing trees: B-trees
+05. Brute-force; genetic algorithms; backtracking
+06. Midterm 1
+07. Design strategies introduction; Divide-and-conquer
+08. Solving recurrences: master theorem
+09. Graph representations and algorithms 1
+10. Graph representations and algorithms 2
+11. Midterm 2
+12. Greedy algorithms
+13. Dynamic programming
+14. Combinatorics and counting
+15. Probabilistic algorithms
+16. Final Exam"""
+
+module_events = """
+01. Discord assignment, Attendance due
+02. Labor Day
+03.
+04.
+05. Project 1 due
+06. Midterm 1
+07.
+08. Columbus Day, Project 2 due
+09.
+10.
+11. Midterm 2, Project 3 due
+12. Veteran's Day
+13.
+14.
+15. Project 4 due
+16. Final exam: link, schedule"""

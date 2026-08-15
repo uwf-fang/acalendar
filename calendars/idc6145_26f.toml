@@ -1,0 +1,25 @@
+first_day = '2026-08-17'
+last_day = '2026-10-10'
+spring_break = ''
+
+module_titles = """
+01. Course Introduction;Intro to big data; Big data lifecycle
+02. Data Storage for Big Data
+03. Data Processing for Big Data
+04. PySpark Basics
+05. Big Data Analytics 1
+06. Big Data Analytics 2
+07. Other Topics in Big Data
+08. Final Exam
+"""
+
+module_events = """
+01. First Week Attendance due
+02. Labor Day, HW1 due
+03.
+04. HW2 due
+05. Project Topic due
+06.
+07. Project due
+08. Final Exam due
+"""

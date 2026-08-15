@@ -100,7 +100,9 @@ def parse_lines(content_text: str, num_weeks: int, name: str) -> List[str]:
         return []
     content_lines: List[str] = [line[3:].strip() for line in content_text.split('\n') if line.strip()]
     if len(content_lines) != num_weeks:
-        raise ValueError(f'Number of {name} does not agree with number of weeks')
+        raise ValueError(
+            f'Number of {name} ({len(content_lines)}) does not agree with number of weeks ({num_weeks})'
+        )
     return content_lines
 
 class CourseTerm:
@@ -116,13 +118,15 @@ class CourseTerm:
     _module_events: List[str]
     _input_date_format: ClassVar[str] = '%Y-%m-%d'
     _spring_break_week: int  # -1 if no spring break
+    _thanksgiving_break_week: int  # -1 if no thanksgiving break
 
     def __init__(self,
                  start_date: str,
                  end_date: str,
                  module_titles: str,
                  module_events: str,
-                 spring_break: str = ''
+                 spring_break: str = '',
+                 thanksgiving_break: str = ''
     ) -> None:
         # Validate and parse start_date
         try:
@@ -142,32 +146,50 @@ class CourseTerm:
         self._weeks = weeks_of_period(self._start_date, self._end_date)
         self._num_weeks = len(self._weeks)
 
-        # Validate and parse spring_break
-        if spring_break:
-            self._num_weeks = self._num_weeks - 1  # exclude spring break week
-            try:
-                date_of_week = datetime.strptime(spring_break, self._input_date_format).date()
-            except Exception:
-                raise ValueError(f"Invalid spring break date format '{spring_break}'. Expected {self._input_date_format}")
-            if not (self._start_date <= date_of_week <= self._end_date):
-                raise ValueError("Spring break must be within the term dates")
-            self._spring_break_week = -1
-            for i, (week_start, week_end) in enumerate(self.weeks):
-                if week_start <= date_of_week <= week_end:
-                    self._spring_break_week = i
-                    break
-            if self._spring_break_week == -1:
-                raise ValueError("Spring break date does not match any week in the term")
-        else:
-            self._spring_break_week = -1
+        self._spring_break_week = self._parse_break(spring_break, 'Spring break')
+        self._thanksgiving_break_week = self._parse_break(thanksgiving_break, 'Thanksgiving break')
 
         self._module_titles = parse_lines(module_titles, self._num_weeks, 'titles')
         self._module_events = parse_lines(module_events, self._num_weeks, 'events')
 
-        # insert spring break into titles and events list
-        if self._spring_break_week != -1:
-            self._module_titles.insert(self._spring_break_week, "Spring Break")
-            self._module_events.insert(self._spring_break_week, "No classes")
+        # insert breaks into titles and events list, from the latest week to avoid index shifting
+        breaks: List[Tuple[int, str]] = sorted(
+            [(w, label) for w, label in
+             ((self._spring_break_week, "Spring Break"), (self._thanksgiving_break_week, "Thanksgiving Break"))
+             if w != -1],
+            reverse=True
+        )
+        for week_idx, label in breaks:
+            self._module_titles.insert(week_idx, label)
+            self._module_events.insert(week_idx, "No classes")
+
+    def _parse_break(self, break_date: str, label: str) -> int:
+        """
+        Parse a break date (e.g. spring break, Thanksgiving break) and return its week index.
+
+        Args:
+            break_date (str): Date string within the break week, or empty if no break.
+            label (str): Human-readable name of the break (for error messages).
+
+        Returns:
+            int: Week index of the break, or -1 if no break was given.
+
+        Raises:
+            ValueError: If the date is invalid or does not fall within any week.
+        """
+        if not break_date:
+            return -1
+        self._num_weeks = self._num_weeks - 1  # exclude break week
+        try:
+            date_of_week = datetime.strptime(break_date, self._input_date_format).date()
+        except Exception:
+            raise ValueError(f"Invalid {label.lower()} date format '{break_date}'. Expected {self._input_date_format}")
+        if not (self._start_date <= date_of_week <= self._end_date):
+            raise ValueError(f"{label} must be within the term dates")
+        for i, (week_start, week_end) in enumerate(self.weeks):
+            if week_start <= date_of_week <= week_end:
+                return i
+        raise ValueError(f"{label} date does not match any week in the term")
 
     @property
     def weeks(self) -> List[Tuple[date, date]]:

@@ -24,13 +24,15 @@ def run(conf_file: str, latex: bool, csv: bool, html: bool) -> None:
     module_titles: str = conf.get('module_titles', "").strip()
     module_events: str = conf.get('module_events', "").strip()
     spring_break: str = conf.get('spring_break', "").strip()
+    thanksgiving_break: str = conf.get('thanksgiving_break', "").strip()
 
     cal: CourseTerm = CourseTerm(
         start_date=start_date,
         end_date=end_date,
         module_titles=module_titles,
         module_events=module_events,
-        spring_break=spring_break
+        spring_break=spring_break,
+        thanksgiving_break=thanksgiving_break
     )
     if latex:
         print(cal.tex)

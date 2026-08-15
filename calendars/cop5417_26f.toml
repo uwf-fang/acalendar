@@ -1,0 +1,25 @@
+first_day = '2026-10-12'
+last_day = '2026-12-12'
+thanksgiving_break = '2026-11-23'
+
+module_titles = """
+01. Course Intro; Java; Dev. Environment
+02. Stack, Queue and linked list; Algorithm analysis
+03. Sorting
+04. Priority queue and heap
+05. Trees
+06. Hashing
+07. Graphs
+08. Final exam week
+"""
+
+module_events = """
+01. First Week Attendance due
+02. Labor Day, HW1 due
+03.
+04. HW2 due
+05. Project Topic due
+06.
+07. Project due
+08. Final Exam due
+"""
