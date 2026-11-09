@@ -1,3 +1,4 @@
+# Incomplete historical outline. Add first_day and last_day before generating a calendar.
 module_titles = """Course Intro, Environment and Language Overview
 Variables, Expressions and Control Flow
 User-defined Functions

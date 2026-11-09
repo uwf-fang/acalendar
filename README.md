@@ -12,15 +12,14 @@ can produce CSV text, a LaTeX table, or an HTML table.
 
 ## Installation
 
-The package has not been published to the Python Package Index (PyPI) yet.
-PyPI publication is planned and currently pending.
+Install from the GitHub repository. The package is not currently published on PyPI.
 
 For now, install and run it from a local clone. The project uses Poetry, so
 install [Poetry](https://python-poetry.org/docs/) first, then run:
 
 ```bash
-git clone <repository-url>
-cd academic_calendar
+git clone https://github.com/uwf-fang/acalendar.git
+cd acalendar
 poetry install
 ```
 
@@ -71,13 +70,16 @@ poetry run calendar -c calendars/cop3530_25f.toml --latex > calendar.tex
 
 ### 3. Create or edit a configuration
 
-A configuration file must include `first_day`, `last_day`, `module_titles`,
-and `module_events`. Dates use `YYYY-MM-DD` format. The optional
+A configuration file must include `first_day` and `last_day`. The optional
+`module_titles` and `module_events` fields produce blank cells when omitted. Dates use `YYYY-MM-DD` format. The optional
 `spring_break` and `thanksgiving_break` values also use that format; leave them
-empty when the term has no such break.
+empty when the term has no such break. Break dates must fall on a weekday
+within the term. Two breaks cannot occupy the same week. Native TOML dates are
+also accepted for the date fields.
 
-`module_titles` and `module_events` contain one numbered line per instructional
-week. The number and period are removed when the calendar is generated:
+`module_titles` and `module_events`, when supplied, contain one nonblank line per
+instructional week. An optional leading number and period are removed when the
+calendar is generated. Plain, unnumbered lines are also accepted:
 
 ```toml
 first_day = "2025-08-25"
@@ -98,7 +100,13 @@ module_events = """
 
 The number of title and event lines must match the number of weeks in the
 term. A break adds a generated `No classes` week, so the input lists should
-contain only instructional weeks.
+contain only instructional weeks. Module text is treated as plain text, with
+quoting for CSV and escaping for HTML and LaTeX. LaTeX output uses `booktabs`
+commands and is intended to be placed inside a table environment.
+
+The historical `calendars/cop3014_25s.toml` outline has no term dates. Add
+`first_day` and `last_day` before using that file. The other 15 bundled
+configurations are exercised by the test suite.
 
 ## Development
 
@@ -110,3 +118,8 @@ poetry run pytest
 
 Contributions are welcome. Please add or update tests for changes and open a
 pull request with a clear description.
+
+
+## License
+
+MIT, copyright 2026 Xingang (Ian) Fang. See [LICENSE](LICENSE).

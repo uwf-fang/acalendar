@@ -2,7 +2,10 @@
 Module of academic calendar related features
 """
 
+import csv
+import io
 import os
+import re
 from datetime import date, timedelta, datetime
 
 from jinja2 import Environment, FileSystemLoader
@@ -59,12 +62,10 @@ def weeks_of_period(start_date: date, end_date: date) -> List[Tuple[date, date]]
     if end_date.weekday() > FRIDAY:
         end_date = find_weekday_same_week(end_date, FRIDAY)
     week_starts: List[datetime] = list(rrule(WEEKLY, dtstart=find_weekday_same_week(start_date, MONDAY), until=end_date))
-    weeks: List[Tuple[date, date]] = [(dt.date(), find_weekday_same_week(dt.date(), FRIDAY)) for dt in week_starts]
-    if weeks:
-        weeks[0] = (max(start_date, find_weekday_same_week(start_date, MONDAY)),
-                    find_weekday_same_week(start_date, FRIDAY))
-        weeks[-1] = (find_weekday_same_week(end_date, MONDAY),
-                     min(end_date, find_weekday_same_week(end_date, FRIDAY)))
+    weeks: List[Tuple[date, date]] = [
+        (max(start_date, dt.date()), min(end_date, find_weekday_same_week(dt.date(), FRIDAY)))
+        for dt in week_starts
+    ]
     return weeks
 
 
@@ -96,9 +97,10 @@ def parse_lines(content_text: str, num_weeks: int, name: str) -> List[str]:
     Raises:
         ValueError: If the number of lines does not match num_weeks.
     """
-    if not content_text:
-        return []
-    content_lines: List[str] = [line[3:].strip() for line in content_text.split('\n') if line.strip()]
+    if not content_text.strip():
+        return [''] * num_weeks
+    content_lines: List[str] = [re.sub(r'^\d+\.\s*', '', line.strip())
+                                for line in content_text.splitlines() if line.strip()]
     if len(content_lines) != num_weeks:
         raise ValueError(
             f'Number of {name} ({len(content_lines)}) does not agree with number of weeks ({num_weeks})'
@@ -148,6 +150,10 @@ class CourseTerm:
 
         self._spring_break_week = self._parse_break(spring_break, 'Spring break')
         self._thanksgiving_break_week = self._parse_break(thanksgiving_break, 'Thanksgiving break')
+        break_weeks = [week for week in (self._spring_break_week, self._thanksgiving_break_week) if week != -1]
+        if len(break_weeks) != len(set(break_weeks)):
+            raise ValueError('Spring break and Thanksgiving break must be in different weeks')
+        self._num_weeks -= len(break_weeks)
 
         self._module_titles = parse_lines(module_titles, self._num_weeks, 'titles')
         self._module_events = parse_lines(module_events, self._num_weeks, 'events')
@@ -179,7 +185,6 @@ class CourseTerm:
         """
         if not break_date:
             return -1
-        self._num_weeks = self._num_weeks - 1  # exclude break week
         try:
             date_of_week = datetime.strptime(break_date, self._input_date_format).date()
         except Exception:
@@ -248,18 +253,19 @@ class CourseTerm:
             str: CSV representation of the calendar.
         """
         columns: List[str] = ['Week', 'Dates', 'Content', 'Notes']
-        table_header: str = ','.join(map(quoted, columns))
         date_templ: str = '%m/%d'
-        contents: List[str] = [table_header]
+        output = io.StringIO(newline='')
+        writer = csv.writer(output, quoting=csv.QUOTE_ALL, lineterminator='\n')
+        writer.writerow(columns)
         for i, (week_start, week_end) in enumerate(self.weeks):
             content: List[str] = [
-                f'"{i + 1}"',
-                f'"{week_start.strftime(date_templ)}-{week_end.strftime(date_templ)}"',
-                f'"{self._module_titles[i]}"',
-                f'"{self._module_events[i]}"'
+                str(i + 1),
+                f'{week_start.strftime(date_templ)}-{week_end.strftime(date_templ)}',
+                self._module_titles[i],
+                self._module_events[i]
             ]
-            contents.append(','.join(content))
-        return '\n'.join(contents)
+            writer.writerow(content)
+        return output.getvalue().removesuffix('\n')
 
     @property
     def tex(self) -> str:
@@ -273,14 +279,17 @@ class CourseTerm:
         template: str = r'{:02d} & {:s}-{:s} & {:s} & & {:s} \\'
         date_templ: str = '%m/%d'
         lines: List[str] = [r'\toprule', header, r'\midrule']
+        escapes = {'\\': r'\textbackslash{}', '&': r'\&', '%': r'\%', '$': r'\$',
+                   '#': r'\#', '_': r'\_', '{': r'\{', '}': r'\}',
+                   '~': r'\textasciitilde{}', '^': r'\textasciicircum{}'}
         for i, (week_start, week_end) in enumerate(self.weeks):
             lines.append(
                 template.format(
                     i + 1,
                     week_start.strftime(date_templ),
                     week_end.strftime(date_templ),
-                    self._module_titles[i],
-                    self._module_events[i]
+                    ''.join(escapes.get(char, char) for char in self._module_titles[i]),
+                    ''.join(escapes.get(char, char) for char in self._module_events[i])
                 )
             )
         return '\n'.join(lines)
@@ -295,7 +304,7 @@ class CourseTerm:
         """
         # Set up Jinja2 environment
         template_dir: str = os.path.join(os.path.dirname(__file__), 'templates')
-        env: Environment = Environment(loader=FileSystemLoader(template_dir))
+        env: Environment = Environment(loader=FileSystemLoader(template_dir), autoescape=True)
         template = env.get_template('calendar.html')
 
         # Prepare data for the template
